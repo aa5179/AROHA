@@ -17,15 +17,17 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Emotion Analysis API", version="1.0.0")
+app = FastAPI(title="Aroha Mental Health API", version="1.0.0")
 
-# CORS configuration
+# CORS setup - ADD YOUR VERCEL DOMAIN
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # React dev server
-        "https://your-app-name.vercel.app",  # Replace with your Vercel domain
-        "https://*.vercel.app",  # Allow all Vercel subdomains for now
+        "http://localhost:5173",  # Vite dev server
+        "https://aroha-flax.vercel.app",  # Your Vercel domain ← ADD THIS
+        "https://*.vercel.app",  # All Vercel subdomains
+        "https://*.netlify.app",  # Backup hosting
     ],
     allow_credentials=True,
     allow_methods=["*"],
