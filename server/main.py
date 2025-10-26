@@ -5,6 +5,7 @@ from typing import List, Optional, Dict, Any
 import os
 from dotenv import load_dotenv
 import logging
+import uvicorn
 from emotion_analyzer import EmotionAnalyzer
 from emotion_analyzer_ai import AIEmotionAnalyzer
 from chatbot_ai import MentalHealthChatbot
