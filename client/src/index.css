@@ -1,0 +1,167 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply min-h-screen font-sans text-bark-800 dark:text-forest-100;
+    position: relative;
+    overflow-x: hidden;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+
+  /* Video background container */
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+  }
+
+  .video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+      135deg,
+      rgba(240, 249, 240, 0.95) 0%,
+      rgba(236, 247, 236, 0.9) 25%,
+      rgba(220, 244, 220, 0.85) 50%,
+      rgba(186, 230, 186, 0.8) 75%,
+      rgba(134, 209, 134, 0.75) 100%
+    );
+    z-index: -1;
+  }
+
+  .dark body::after {
+    background: linear-gradient(
+      135deg,
+      rgba(20, 83, 45, 0.95) 0%,
+      rgba(22, 101, 52, 0.9) 25%,
+      rgba(21, 128, 61, 0.85) 50%,
+      rgba(22, 101, 52, 0.8) 75%,
+      rgba(20, 83, 45, 0.75) 100%
+    );
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white/80 dark:bg-forest-900/80 backdrop-blur-sm rounded-2xl shadow-lg border border-forest-200/50 dark:border-forest-700/50;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-forest-500 to-moss-500 hover:from-forest-600 hover:to-moss-600 text-white font-medium px-6 py-3 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-white/80 dark:bg-forest-800/80 backdrop-blur-sm hover:bg-forest-50/90 dark:hover:bg-forest-700/90 text-bark-700 dark:text-forest-200 font-medium px-6 py-3 rounded-xl border border-forest-200/60 dark:border-forest-600/60 transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .mood-indicator {
+    @apply w-4 h-4 rounded-full inline-block mr-2;
+  }
+
+  .mood-happy {
+    @apply bg-gradient-to-r from-leaf-400 to-leaf-500;
+  }
+
+  .mood-neutral {
+    @apply bg-gradient-to-r from-earth-400 to-earth-500;
+  }
+
+  .mood-sad {
+    @apply bg-gradient-to-r from-bark-400 to-bark-500;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(
+    240,
+    249,
+    240,
+    0.6
+  ); /* Light green/forest background */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track:is(.dark *) {
+  background-color: rgba(20, 83, 45, 0.6); /* Dark forest background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(34, 197, 94, 0.7); /* Forest green thumb */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(34, 197, 94, 0.9); /* Darker forest green on hover */
+}
+
+::-webkit-scrollbar-thumb:is(.dark *) {
+  background-color: rgba(
+    74,
+    222,
+    128,
+    0.7
+  ); /* Light forest green in dark mode */
+}
+
+::-webkit-scrollbar-thumb:hover:is(.dark *) {
+  background-color: rgba(
+    74,
+    222,
+    128,
+    0.9
+  ); /* Brighter on hover in dark mode */
+}
+
+/* Hide scrollbar utility class */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
