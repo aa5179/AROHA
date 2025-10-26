@@ -66,7 +66,7 @@ const Navbar = () => {
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
                     <img
-                      src="/src/assets/logo.jpg"
+                      src="/logo.jpg"
                       alt="Aroha Logo"
                       className="w-full h-full object-cover rounded-full"
                     />
