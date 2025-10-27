@@ -1,13 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Music, Volume2, VolumeX, X } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const FloatingButtons = () => {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   const [showMusicOptions, setShowMusicOptions] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSound, setCurrentSound] = useState(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
   const audioRef = useRef(null);
+  const location = useLocation();
 
   // Peaceful sounds data
   const peacefulSounds = [
@@ -107,88 +111,154 @@ const FloatingButtons = () => {
     setTimeout(startDefaultSound, 1000);
   }, []);
 
+  // Hide buttons on mobile when on chatbot page or when scrolling down
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+
+      // On mobile (screen width < 768px)
+      const isMobile = window.innerWidth < 768;
+      const isChatbotPage = location.pathname === "/chatbot";
+
+      if (isMobile && isChatbotPage) {
+        // On chatbot page, hide buttons when user scrolls past the header (more than 200px)
+        // This means they're likely at the chat input area
+        if (currentScrollY > 200) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+      } else if (isMobile) {
+        // On other pages, check if user scrolled to bottom third of the page
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollPercentage =
+          (currentScrollY + windowHeight) / documentHeight;
+
+        // Hide when user reaches bottom 30% of the page (where chatbot might be)
+        if (scrollPercentage > 0.7) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
+      } else {
+        // Always show on desktop
+        setIsVisible(true);
+      }
+    };
+
+    // Initial check
+    handleScroll();
+
+    // Add scroll listener
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [location.pathname]);
+
   return (
     <>
       {/* Audio element */}
       <audio ref={audioRef} preload="none" />
 
       {/* Music Button - Left Side */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative group"
-        >
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowMusicOptions(!showMusicOptions)}
-            className={`w-12 h-12 rounded-full shadow-lg backdrop-blur-sm border transition-all duration-200 flex items-center justify-center ${
-              isPlaying
-                ? "bg-forest-500 text-white border-forest-400"
-                : "bg-white/80 dark:bg-forest-800/80 text-forest-600 dark:text-forest-200 border-forest-200/60 dark:border-forest-600/60 hover:bg-forest-50/90 dark:hover:bg-forest-700/90"
-            }`}
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: -20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-6 left-6 z-50"
           >
-            {isPlaying ? <Volume2 size={20} /> : <Music size={20} />}
-          </motion.button>
-
-          {/* Music Options Dropdown */}
-          <AnimatePresence>
-            {showMusicOptions && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                className="absolute bottom-14 left-0 bg-white/90 dark:bg-forest-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-forest-200/60 dark:border-forest-700/60 p-3 min-w-48"
+            <div className="relative group">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowMusicOptions(!showMusicOptions)}
+                className={`w-12 h-12 rounded-full shadow-lg backdrop-blur-sm border transition-all duration-200 flex items-center justify-center ${
+                  isPlaying
+                    ? "bg-forest-500 text-white border-forest-400"
+                    : "bg-white/80 dark:bg-forest-800/80 text-forest-600 dark:text-forest-200 border-forest-200/60 dark:border-forest-600/60 hover:bg-forest-50/90 dark:hover:bg-forest-700/90"
+                }`}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-medium text-forest-700 dark:text-forest-200">
-                    Peaceful Sounds
-                  </h3>
-                  {isPlaying && (
-                    <button
-                      onClick={stopSound}
-                      className="text-forest-600 dark:text-forest-300 hover:text-forest-800 dark:hover:text-forest-100"
-                    >
-                      <VolumeX size={16} />
-                    </button>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  {peacefulSounds.map((sound) => (
-                    <button
-                      key={sound.name}
-                      onClick={() => playSound(sound)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
-                        currentSound === sound.name && isPlaying
-                          ? "bg-forest-500 text-white"
-                          : "hover:bg-forest-100/50 dark:hover:bg-forest-800/50 text-forest-700 dark:text-forest-200"
-                      }`}
-                    >
-                      <span>{sound.icon}</span>
-                      <span className="text-sm font-medium">{sound.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </div>
+                {isPlaying ? <Volume2 size={20} /> : <Music size={20} />}
+              </motion.button>
+
+              {/* Music Options Dropdown */}
+              <AnimatePresence>
+                {showMusicOptions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                    className="absolute bottom-14 left-0 bg-white/90 dark:bg-forest-900/90 backdrop-blur-sm rounded-xl shadow-lg border border-forest-200/60 dark:border-forest-700/60 p-3 min-w-48"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-medium text-forest-700 dark:text-forest-200">
+                        Peaceful Sounds
+                      </h3>
+                      {isPlaying && (
+                        <button
+                          onClick={stopSound}
+                          className="text-forest-600 dark:text-forest-300 hover:text-forest-800 dark:hover:text-forest-100"
+                        >
+                          <VolumeX size={16} />
+                        </button>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      {peacefulSounds.map((sound) => (
+                        <button
+                          key={sound.name}
+                          onClick={() => playSound(sound)}
+                          className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 ${
+                            currentSound === sound.name && isPlaying
+                              ? "bg-forest-500 text-white"
+                              : "hover:bg-forest-100/50 dark:hover:bg-forest-800/50 text-forest-700 dark:text-forest-200"
+                          }`}
+                        >
+                          <span>{sound.icon}</span>
+                          <span className="text-sm font-medium">
+                            {sound.name}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Emergency Button - Right Side */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setShowEmergencyModal(true)}
-          className="w-14 h-14 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
-        >
-          <Phone size={24} />
-        </motion.button>
-      </div>
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: 20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.8, x: 20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setShowEmergencyModal(true)}
+              className="w-14 h-14 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
+            >
+              <Phone size={24} />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Emergency Modal */}
       <AnimatePresence>

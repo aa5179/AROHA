@@ -55,7 +55,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo - Left Section */}
-            <div className="flex items-center">
+            <div className="flex items-center flex-1">
               <Link to="/dashboard">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -79,7 +79,7 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Navigation - Center Section */}
-            <div className="hidden md:flex items-center justify-center space-x-6">
+            <div className="hidden md:flex items-center justify-center space-x-4 lg:space-x-6 flex-1">
               {navItems.map((item, index) => {
                 const Icon = item.icon;
                 return (
@@ -106,7 +106,7 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Right Side: User Info, Logout & Theme Toggle */}
-            <div className="hidden md:flex items-center space-x-3">
+            <div className="hidden md:flex items-center justify-end space-x-3 flex-1">
               {/* User Greeting */}
               <div className="hidden lg:block text-right">
                 <p className="text-sm font-medium text-bark-700 dark:text-forest-200">
@@ -160,17 +160,46 @@ const Navbar = () => {
                 {isDark ? <Sun size={20} /> : <Moon size={20} />}
               </motion.button>
 
-              {/* Hamburger Menu Button */}
+              {/* Hamburger Menu Button with Animation */}
               <motion.button
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={handleMobileMenuToggle}
-                className="p-2 rounded-lg bg-forest-100/60 dark:bg-forest-800/60 text-bark-600 dark:text-forest-200 hover:bg-forest-200/60 dark:hover:bg-forest-700/60 transition-all duration-200"
+                className="p-2 rounded-lg bg-forest-100/60 dark:bg-forest-800/60 text-bark-600 dark:text-forest-200 hover:bg-forest-200/60 dark:hover:bg-forest-700/60 transition-all duration-200 flex items-center justify-center"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 title="Menu"
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                <div className="w-5 h-5 flex flex-col justify-center items-center">
+                  {/* Top line */}
+                  <motion.span
+                    animate={{
+                      rotate: isMobileMenuOpen ? 45 : 0,
+                      y: isMobileMenuOpen ? 5 : 0,
+                      x: isMobileMenuOpen ? 0.1 : 0,
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="w-5 h-0.5 bg-bark-600 dark:bg-forest-200 rounded-full block mb-1"
+                  />
+                  {/* Middle line */}
+                  <motion.span
+                    animate={{
+                      opacity: isMobileMenuOpen ? 0 : 1,
+                      x: isMobileMenuOpen ? -10 : 0,
+                    }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="w-5 h-0.5 bg-bark-600 dark:bg-forest-200 rounded-full block mb-1"
+                  />
+                  {/* Bottom line */}
+                  <motion.span
+                    animate={{
+                      rotate: isMobileMenuOpen ? -45 : 0,
+                      y: isMobileMenuOpen ? -7 : 0,
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="w-5 h-0.5 bg-bark-600 dark:bg-forest-200 rounded-full block"
+                  />
+                </div>
               </motion.button>
             </div>
           </div>

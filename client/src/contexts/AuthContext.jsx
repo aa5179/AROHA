@@ -231,6 +231,18 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const loginWithOAuth = async (provider) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+        skipBrowserRedirect: false,
+      },
+    });
+    if (error) throw error;
+    return data;
+  };
+
   const updateProfile = async (updates) => {
     if (!user) throw new Error("No user logged in");
 
@@ -311,6 +323,7 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         logout,
+        loginWithOAuth,
         updateProfile,
         updateStats,
         isAuthenticated: !!user,

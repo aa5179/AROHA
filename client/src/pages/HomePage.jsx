@@ -80,26 +80,10 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Dark Mode Toggle Button */}
-      <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        onClick={toggleTheme}
-        className="fixed top-4 right-6 z-50 p-4 rounded-2xl bg-white/10 dark:bg-forest-800/10 backdrop-blur-xl border border-white/20 dark:border-forest-700/20 hover:bg-white/20 dark:hover:bg-forest-800/20 transition-all duration-300 group"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        {isDark ? (
-          <Sun className="w-6 h-6 text-yellow-400 group-hover:rotate-12 transition-transform duration-300" />
-        ) : (
-          <Moon className="w-6 h-6 text-forest-700 group-hover:-rotate-12 transition-transform duration-300" />
-        )}
-      </motion.button>
-
       {/* Content */}
       <div className="relative z-10">
         {/* Navigation */}
-        <header className="relative z-50 bg-white/10 dark:bg-forest-900/10 backdrop-blur-xl border-b border-white/20 dark:border-forest-700/20">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-forest-900/90 backdrop-blur-xl border-b border-white/20 dark:border-forest-700/20 shadow-sm">
           <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               {/* Logo */}
@@ -119,8 +103,8 @@ const HomePage = () => {
                 </span>
               </motion.div>
 
-              {/* Navigation Links */}
-              <div className="hidden md:flex items-center space-x-8">
+              {/* Navigation Links - Desktop */}
+              <div className="hidden md:flex items-center space-x-6">
                 <a
                   href="#features"
                   className="text-bark-700 dark:text-forest-200 hover:text-forest-600 dark:hover:text-forest-100 transition-colors duration-300 font-medium"
@@ -139,6 +123,20 @@ const HomePage = () => {
                 >
                   Sign In
                 </Link>
+
+                {/* Dark Mode Toggle - Desktop */}
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg bg-forest-100/60 dark:bg-forest-800/60 text-bark-600 dark:text-forest-200 hover:bg-forest-200/60 dark:hover:bg-forest-700/60 transition-all duration-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title="Toggle theme"
+                >
+                  {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                </motion.button>
+
                 <Link to="/signup">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -150,8 +148,21 @@ const HomePage = () => {
                 </Link>
               </div>
 
-              {/* Mobile Menu Button */}
-              <div className="md:hidden">
+              {/* Mobile Right Side: Dark Mode + Sign In */}
+              <div className="md:hidden flex items-center space-x-3">
+                {/* Dark Mode Toggle - Mobile */}
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg bg-forest-100/60 dark:bg-forest-800/60 text-bark-600 dark:text-forest-200 hover:bg-forest-200/60 dark:hover:bg-forest-700/60 transition-all duration-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title="Toggle theme"
+                >
+                  {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                </motion.button>
+
                 <Link to="/login">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -167,7 +178,7 @@ const HomePage = () => {
         </header>
 
         {/* Hero Section */}
-        <section className="relative pt-20 pb-32 px-4 sm:px-6 lg:px-8">
+        <section className="relative pt-28 sm:pt-32 pb-32 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
