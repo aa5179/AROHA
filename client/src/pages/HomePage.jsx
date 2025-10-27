@@ -110,7 +110,7 @@ const HomePage = () => {
                 className="flex items-center space-x-3"
               >
                 <img
-                  src="/src/assets/logo.jpg"
+                  src="/logo.jpg"
                   alt="Aroha Logo"
                   className="w-10 h-10 rounded-full shadow-lg object-cover"
                 />
